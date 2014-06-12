@@ -1,65 +1,68 @@
 package com.example.lily.app;
 
-import android.graphics.Bitmap;
-
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import org.simpleframework.xml.Element;
 
 /**
  * Created by gwoo on 2014. 6. 12..
  */
 
-@Element(name = "item")
 @DatabaseTable(tableName = "book")
 public class Book {
 
     @DatabaseField(generatedId = true)
     public int _id;
 
-    @Element
     @DatabaseField
     public String title;
 
-    @Element
     @DatabaseField
     public String link;
 
-    @Element(name = "image")
     @DatabaseField
     public String image_url;
 
-    @DatabaseField
-    public Bitmap image;
+    @DatabaseField(dataType = DataType.BYTE_ARRAY)
+    public byte[] image;
 
-    @Element
     @DatabaseField
     public String author;
 
-    @Element
     @DatabaseField
     public String price;
 
-    @Element
     @DatabaseField
     public String discount;
 
-    @Element
     @DatabaseField
     public String publisher;
 
-    @Element
     @DatabaseField
     public String pubdate;
 
-    @Element
     @DatabaseField
     public String isbn;
 
-    @Element
     @DatabaseField
     public String description;
 
 
+    public Book() {
+
+    }
+
+    public Book(Book2 book2) {
+        this.title = book2.channel.item.title;
+        this.link = book2.channel.item.link;
+        this.image_url = book2.channel.item.image;
+        this.author = book2.channel.item.author;
+        this.price = book2.channel.item.price;
+        this.discount = book2.channel.item.discount;
+        this.publisher = book2.channel.item.publisher;
+        this.pubdate = book2.channel.item.pubdate;
+        this.isbn = book2.channel.item.isbn;
+        this.description = book2.channel.item.description;
+
+    }
 }

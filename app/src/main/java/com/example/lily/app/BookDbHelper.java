@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -20,7 +20,7 @@ public class BookDbHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
 
-    private RuntimeExceptionDao<Book, Integer> bookDao = null;
+    private Dao<Book, Integer> bookDao = null;
 
     public BookDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,9 +58,9 @@ public class BookDbHelper extends OrmLiteSqliteOpenHelper {
     }
 
 
-    public RuntimeExceptionDao<Book, Integer> getBookDao() {
+    public Dao<Book, Integer> getBookDao() throws SQLException {
         if (bookDao == null) {
-            bookDao = getRuntimeExceptionDao(Book.class);
+            bookDao = getDao(Book.class);
         }
         return bookDao;
     }

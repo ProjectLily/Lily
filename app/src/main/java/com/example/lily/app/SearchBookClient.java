@@ -25,10 +25,24 @@ public class SearchBookClient implements Response.Listener, Response.ErrorListen
 
     RequestQueue volleyQueue;
 
+    SearchBookClientListener clientListener;
+
     public SearchBookClient(Context context, BarcodeResult barcodeResult) {
         this.barcodeResult = barcodeResult;
 
         volleyQueue = Volley.newRequestQueue(context);
+    }
+
+    public SearchBookClient(Context context, BarcodeResult barcodeResult, SearchBookClientListener clientListener) {
+        this.barcodeResult = barcodeResult;
+
+        volleyQueue = Volley.newRequestQueue(context);
+
+        this.clientListener = clientListener;
+    }
+
+    public void setListener(SearchBookClientListener listener) {
+        this.clientListener = listener;
     }
 
     public void startRequest() {
@@ -37,6 +51,9 @@ public class SearchBookClient implements Response.Listener, Response.ErrorListen
         StringRequest stringRequest = new StringRequest(Request.Method.GET, reqUrl, this, this);
         volleyQueue.add(stringRequest);
 
+        if (clientListener != null) {
+            clientListener.onStartedRequest();
+        }
     }
 
     private String getReqURL() {
@@ -66,6 +83,11 @@ public class SearchBookClient implements Response.Listener, Response.ErrorListen
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         Log.d("gr8woo","volleyError " + volleyError.getLocalizedMessage());
+
+        if (clientListener != null) {
+            clientListener.onFailRequest(volleyError.getLocalizedMessage());
+        }
+
     }
 
     @Override
@@ -79,12 +101,29 @@ public class SearchBookClient implements Response.Listener, Response.ErrorListen
             try {
                 Serializer serializer = new Persister();
                 Book2 book = serializer.read(Book2.class, xmlString, false);
-                Log.d("gr8woo","serial book " + book.title);
+                Log.d("gr8woo", "serial book " + book.channel.item.title);
+
+                if (clientListener != null) {
+                    clientListener.onSuccessRequest(book);
+                }
             }catch (Exception e) {
+                Log.d("gr8woo", "xml error");
                 e.printStackTrace();
+
+                if (clientListener != null) {
+                    clientListener.onFailRequest(e.getLocalizedMessage());
+                }
             }
         }
 
+    }
+
+    public interface SearchBookClientListener {
+        public void onStartedRequest();
+
+        public void onSuccessRequest(Book2 book2);
+
+        public void onFailRequest(String error);
     }
 
 
