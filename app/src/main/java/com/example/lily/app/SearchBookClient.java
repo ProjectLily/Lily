@@ -78,7 +78,7 @@ public class SearchBookClient implements Response.Listener, Response.ErrorListen
 
             try {
                 Serializer serializer = new Persister();
-                Book book = serializer.read(Book.class, xmlString, false);
+                Book2 book = serializer.read(Book2.class, xmlString, false);
                 Log.d("gr8woo","serial book " + book.title);
             }catch (Exception e) {
                 e.printStackTrace();
